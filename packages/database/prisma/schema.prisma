@@ -24,13 +24,14 @@ model Campus {
 }
 
 model Department {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
   code      String
   campusId  String
-  campus    Campus   @relation(fields: [campusId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  programs  Program[]
+  campus    Campus    @relation(fields: [campusId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@unique([campusId, code])
 }
@@ -45,4 +46,57 @@ model AcademicSession {
   campus    Campus   @relation(fields: [campusId], references: [id])
 
   @@unique([campusId, name])
+}
+
+model Program {
+  id       String @id @default(cuid())
+  name     String
+  code     String
+  degree   String
+  duration Int
+
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  semesters Semester[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([departmentId, code])
+}
+
+model Semester {
+  id String @id @default(cuid())
+
+  number Int
+  name   String
+
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+
+  courses Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([programId, number])
+}
+
+model Course {
+  id String @id @default(cuid())
+
+  code        String
+  title       String
+  credits     Int
+  theoryHours Int
+  labHours    Int
+
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([semesterId, code])
 }
