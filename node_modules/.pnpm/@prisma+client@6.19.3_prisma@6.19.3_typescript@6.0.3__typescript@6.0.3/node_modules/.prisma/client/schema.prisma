@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SemesterType {
+  ODD
+  EVEN
+}
+
+model Campus {
+  id          String            @id @default(cuid())
+  name        String
+  code        String            @unique
+  address     String?
+  departments Department[]
+  sessions    AcademicSession[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  name      String
+  code      String
+  campusId  String
+  campus    Campus   @relation(fields: [campusId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([campusId, code])
+}
+
+model AcademicSession {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(false)
+  campusId  String
+  campus    Campus   @relation(fields: [campusId], references: [id])
+
+  @@unique([campusId, name])
+}
