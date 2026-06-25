@@ -3,7 +3,12 @@ import { Router } from "express";
 import {
   registerController,
   loginController,
+  meController,
 } from "../controllers/auth.controller.js";
+
+import {
+  authenticate,
+} from "../middleware/auth.middleware.js";
 
 const router: Router = Router();
 
@@ -15,6 +20,11 @@ router.post(
 router.post(
   "/login",
   loginController
+);
+router.get(
+  "/me",
+  authenticate,
+  meController
 );
 
 export default router;

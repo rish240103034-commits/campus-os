@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware.js";
 
 import {
   register,
@@ -49,4 +50,13 @@ export async function loginController(
           : "Login failed",
     });
   }
+}
+export async function meController(
+  req: AuthRequest,
+  res: Response
+) {
+  return res.json({
+    success: true,
+    user: req.user,
+  });
 }

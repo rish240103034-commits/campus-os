@@ -44,11 +44,12 @@ export async function register(
   }
 
   const passwordHash =
-    await hashPassword(
-      data.password
-    );
+  await hashPassword(
+    data.password
+  );
 
-  return prisma.user.create({
+const user =
+  await prisma.user.create({
     data: {
       email: data.email,
       passwordHash,
@@ -60,6 +61,19 @@ export async function register(
       role: true,
     },
   });
+
+return {
+  id: user.id,
+  email: user.email,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  isActive: user.isActive,
+  createdAt: user.createdAt,
+  role: {
+    id: user.role.id,
+    name: user.role.name,
+  },
+};
 }
 
 export async function login(
