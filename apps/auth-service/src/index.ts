@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
-
+import authRoutes from "./routes/auth.routes.js";
 dotenv.config();
 
 const app = express();
@@ -21,6 +21,11 @@ app.get("/health", (_, res) => {
 });
 
 const PORT = process.env.PORT || 4001;
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
 
 app.listen(PORT, () => {
   console.log(`Auth Service running on ${PORT}`);
